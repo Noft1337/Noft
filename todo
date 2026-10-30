@@ -1,0 +1,3 @@
+* Make it with argparse in this format:
+    python -m noft <module> --args <--silent|-v>
+    

@@ -1,0 +1,312 @@
+// VSCode Settings
+{
+    // Plugins needed,
+    // Python
+    // Pylint
+    // Black-Formatter
+    // Monokai Pro
+    // YAML
+    // Prettier VSCode
+    // Bash IDE
+    // Shellcheck
+    // shell-format
+    // Shfmt
+    // General
+    "editor.codeLensFontFamily": "Hack Nerd Font",
+    "editor.fontSize": 14,
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+    "editor.detectIndentation": false,
+    "terminal.integrated.fontFamily": "Hack Nerd Font",
+    "terminal.integrated.fontSize": 16,
+    "terminal.integrated.defaultProfile.osx": "bash",
+    "terminal.integrated.hideOnStartup": "never",
+
+    // Define which files to hide on Explorer
+    "files.exclude": {
+        "**/.git": false,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+    },
+    
+    // Define file plugins
+    "files.associations": {
+        "*.yml": "yaml",
+        "*.yaml": "yaml",
+        "*.sh": "shellscript",
+        "*.bash": "shellscript",
+        "*.zsh": "shellscript",
+        "*.bashrc": "shellscript",
+        "*.bash_profile": "shellscript",
+        "*.profile": "shellscript",
+        //"*.env": "shellscript",
+        "*.bash_aliases": "shellscript",
+        "*.bash_functions": "shellscript",
+        "*.py": "python",
+        "*.c": "c",
+        "*.h": "c",
+        "*.cpp": "cpp",
+        "*.md": "markdown",
+    },
+
+    // "workbench.colorTheme": "Monokai Classic",
+    "editor.fontFamily": "'Hack Nerd Font Mono'",
+    "workbench.settings.applyToAllProfiles": [
+        "editor.fontFamily"
+    ],
+    "workbench.preferredLightColorTheme": "Visual Studio Dark",
+    "titan.onTheFlyChecker.enableDocComments": false,
+    "editor.unicodeHighlight.nonBasicASCII": false,
+    "editor.unicodeHighlight.ambiguousCharacters": false,
+    "explorer.confirmDragAndDrop": false,
+
+    // Yaml
+    "yaml.schemas": {
+        "https://json.schemastore.org/github-workflow.json": "/*.github/workflows/*",
+        "https://json.schemastore.org/kubernetes-json-schema/v1.18.0-standalone-strict/all.json": "/*.k8s.yaml"
+    },
+    "json.format.enable": false,
+    "yaml.format.enable": false,
+    "yaml.format.bracketSpacing": true,
+    "yaml.format.proseWrap": "preserve",
+    "yaml.validate": true,
+    "yaml.lint.emptyLines": "warning",
+    "yaml.lint.noTabs": "error",
+    "yaml.lint.bracketSpacing": "warning",
+    "yaml.customTags": [
+        "!Scalar",
+        "!Import",
+        "!Ref",
+        "!Sub",
+        "!GetAtt"
+    ],
+    "prettier.requireConfig": true,
+    "[yaml]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.insertSpaces": true,
+        "editor.tabSize": 2,
+        "editor.formatOnSave": true
+    },
+    "eslint.validate": [
+        "yaml"
+    ],
+    "explorer.confirmDelete": false,
+
+    // Bash
+    "bashIde.logLevel": "warning",
+    "bashIde.explainshellEndpoint": "",
+
+    "shellcheck.executablePath": "/usr/bin/shellcheck",
+    "shellcheck.enable": true,
+    "[shellscript]": {
+        "editor.defaultFormatter": "foxundermoon.shell-format",
+        "editor.formatOnSave": true
+    },
+    "shellformat.path": "/usr/bin/shfmt",
+    "shellformat.flag": "-i 4 -ci",
+    "redhat.telemetry.enabled": true,
+
+    // Python
+    "python.defaultInterpreterPath": "/home/michael/main/bin/python3",
+
+    // Enable the Pylance language server
+    "python.languageServer": "Default",
+    // "python.analysis.useLibraryCodeForTypes": true,
+    // "python.analysis.typeEvaluation.analyzeUnannotatedFunctions": true,
+    // "python.analysis.completeFunctionParens": true,
+    // "python.analysis.autoIndent": true,
+    "python.analysis.indexing": false,
+    "python.analysis.typeCheckingMode": "basic",
+    "python.analysis.completeFunctionParens": true,
+
+    // Linting settings
+    "pylint.args": [
+        "--disable=C0114,C0115,C0116,C0411,W1514,W0603,W0719,W0702,C0303,W0102,C3001,C0412,R0913,E1121"
+    ],
+
+    // Formatting settings
+    "editor.formatOnSave": true,
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.rulers": [88],
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "never",
+            "source.unusedImports": "never"
+        }
+    },
+    "black-formatter.args": [
+        "--line-length",
+        "88"
+    ],
+
+    // Test framework settings
+    "python.testing.unittestEnabled": true,
+    "python.testing.pytestEnabled": true,
+    "python.testing.pytestArgs": [
+        "tests"
+    ],
+
+    "editor.quickSuggestions": {
+        "other": true,
+        "comments": false,
+        "strings": false
+    },
+
+    // C, C++
+    "C_Cpp.codeAnalysis.clangTidy.enabled": true,
+    "C_Cpp.formatting": "clangFormat",
+    "C_Cpp.autocomplete": "default",
+    "C_Cpp.autocompleteAddParentheses": true,
+
+    "C_Cpp.codeAnalysis.clangTidy.checks.enabled": [
+
+    ],
+    "C_Cpp.configurationWarnings": "enabled",
+    "C_Cpp.default.cStandard": "c23",
+    "C_Cpp.default.cppStandard": "c++17",
+    
+    "[c]": {
+        "editor.semanticHighlighting.enabled": true,
+        "editor.formatOnSave": true,
+        // "editor.defaultFormatter": "xaver.clang-format",
+        "editor.tabSize": 8,
+    },
+    "cmake.pinnedCommands": [
+        "workbench.action.tasks.configureTaskRunner",
+        "workbench.action.tasks.runTask"
+    ],
+
+    // Golang
+    "go.useLanguageServer": true,
+    "go.inferGopath": false,
+    "go.lintOnSave": "package",
+    "go.vetOnSave": "package",
+    "go.buildFlags": [],
+    "go.buildTags": "",
+    "go.coverOnSave": false,
+    "go.formatTool": "gofumpt",
+    "go.alternateTools": {
+        "go-langserver": "gopls"
+    },
+    "[go]": {
+        "editor.insertSpaces": false,
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit"
+        }
+    },
+    "todohighlight.isEnable": false,
+    // todo: remove todohighlight
+    // "todohighlight.defaultStyle": {
+    //     "backgroundColor": "black",
+    //     "color": "ff0055",
+    //     "overviewRulerColor": "ff0055"
+    // },
+    // "todohighlight.isCaseSensitive": false,
+    "todo-tree.regex.regexCaseSensitive": false,
+    "todo-tree.tree.filterCaseSensitive": false,
+    "todo-tree.general.tags": [
+        "BUG",
+        "HACK",
+        "FIXME",
+        "TODO",
+        "NOTE",
+        "XXX",
+        "[ ]",
+        "[x]"
+    ],
+    "todo-tree.highlights.customHighlight": {
+        "[x]": {
+            "foreground": "#00c200",
+        },
+        "[ ]": {
+            "foreground": "#d30000",
+        },
+        "TODO": {
+            "foreground": "#FFD700",
+            "rulerColour": "#ffd700",
+            "rulerOpacity": 70,
+            "icon": "check",
+            "type": "text",
+        },
+        "NOTE": {
+            "foreground": "#ff0062",
+            "icon": "note",
+        },
+        "FIXME": {
+            "foreground": "#ffffff",
+            "background": "#ff0000",
+            "rulerColour": "#ff0000",
+            "rulerOpacity": 70,
+            "opacity": 75,
+            "icon": "tools",
+            "type": "text"
+        },
+        "HACK": {
+            "foreground": "#FFFFFF",
+            "icon": "beaker"
+        },
+        "BUG": {
+            "foreground": "#2ECC71",
+            "icon": "bug",
+            "type": "text"
+        },
+        "XXX": {
+            "foreground": "#3498DB",
+            "icon": "flame",
+            "fontStyle": "bold"
+        }
+    },
+    "docker.extension.enableComposeLanguageServer": false,
+    "[dockerfile]": {
+        "editor.defaultFormatter": "ms-azuretools.vscode-containers"
+    },
+    // Indents colors
+    "indentRainbow.colors": [
+        "rgba(53, 52, 53,0.15)",
+        "rgba(42, 51, 136,0.15)",
+        "rgba(94, 45, 144, 0.15)",
+        "rgba(123, 28, 125,0.15)",
+        "rgba(218, 18, 75,0.15)",
+        "rgba(239, 83, 61,0.15)",
+        "rgba(246, 140, 31,0.15)",
+        "rgba(246, 140, 31,0.1)",
+        "rgba(246, 140, 31,0.05)",
+        "rgba(246, 140, 31,0.025)"
+    ],
+    // Markdown
+    "[markdown]": {
+        "editor.unicodeHighlight.ambiguousCharacters": false,
+        "editor.unicodeHighlight.invisibleCharacters": false,
+        "diffEditor.ignoreTrimWhitespace": false,
+        "editor.wordWrap": "on",
+        "editor.tabSize": 2,
+        "editor.quickSuggestions": {
+            "comments": "off",
+            "strings": "off",
+            "other": "off"
+        }
+    },
+
+    "workbench.colorCustomizations": {
+        "[Monokai Pro Light (Filter Sun)]": {
+            "terminal.foreground": "#ffffff",
+            "terminal.background": "#1C1C1C",
+            "terminalOverviewRuler.cursorForeground": "#ffffff",
+            "terminalCursor.foreground": "#ffffff",
+            "terminalCursor.background": "#ffffff",
+            "terminal.selectionBackground": "#ffffff",
+        }
+    },
+    "workbench.iconTheme": "material-icon-theme",
+    "editor.semanticHighlighting.enabled": true,
+    "editor.semanticTokenColorCustomizations": {
+        "rules": {
+            "selfParameter": "#be4da6",
+            "clsParameter": "#be4da6",
+        },
+    },
+}

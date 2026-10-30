@@ -1,0 +1,134 @@
+#!/bin/bash
+# Author: Michael Audri
+# I use this script in initcpio to display a fancy message when booting up my host
+
+welcome_msg="Welcome to Noft's Arch Linux"
+
+# Define the rainbow colors
+# shellcheck disable=SC2034
+colors_16=(31 33 32 36 34 35)
+# shellcheck disable=SC2034
+colors_256=(
+    196 202 208 214 220 226 190 154 118 82 46 47 48 49 50 51 45 39
+    33 27 21 20 19 18 54 55 56 57 93 129 165 201 200 199 198 197
+)
+
+if [[ $(tput colors) -ge 256 ]]; then
+    IS_256_TERM=true
+else
+    IS_256_TERM=false
+fi
+
+# Get the terminal width using tput, if available
+if command -v tput >/dev/null; then
+    _term_cols=$(tput cols)
+    if $IS_256_TERM; then
+        _palette=("${colors_256[@]}")
+    else
+        _palette=("${colors_16[@]}")
+    fi
+
+    _len="${#_palette[@]}"
+    _to_sub=$(expr "$_term_cols" % "$_len")
+
+    palette_len=$((_term_cols - _to_sub))
+else
+    palette_len=114 # Fallback to 114 if tput is not available
+fi
+
+# Reset color
+reset="\033[0m"
+if $IS_256_TERM; then
+    bg_color="\e[48;5;16m"
+else
+    bg_color="\033[40m"
+fi
+
+get_color_code_from_palette() {
+    local -n palette="$1"
+    local index=$(($2 % ${#palette[@]}))
+    echo "${palette[$index]}"
+}
+
+get_text() {
+    local char_i=0
+    local text=""
+
+    for ((i = 0; i < ${#welcome_msg}; i++)); do
+        char="${welcome_msg:i:1}"
+        text+="${bg_color}"
+        if [[ "$char" == " " ]]; then
+            text+="$char"
+        else
+            color="\033[$(get_color_code_from_palette colors_16 "$char_i")m"
+            text+="${color}$char$reset"
+            ((char_i += 1))
+        fi
+    done
+
+    echo "$text"
+}
+
+get_gradient() {
+    local start="$1"
+    local end="$2"
+
+    gradient=""
+
+    # Loop through each color and print '@' with the color
+    for ((i = "$start"; i < "$end"; i++)); do
+        if $IS_256_TERM; then
+            code=$(get_color_code_from_palette colors_256 $i)
+            char_color="\033[48;5;${code}m"
+        else
+            code=$(($(get_color_code_from_palette colors_16 $i) + 10))
+            char_color="\033[${code}m"
+        fi
+
+        gradient+="${char_color} "
+    done
+    gradient+=$reset
+
+    echo "$gradient"
+}
+
+str_in_anothers_center() {
+    local s1="$1"
+    local s2="$2"
+    local s1_len=${#s1}
+    local s1_half=$((s1_len / 2))
+    local final=""
+
+    final+=${s1:0:${s1_half}}
+    final+="$s2"
+    final+=${s1:${s1_half}}
+
+    echo "$final"
+}
+
+gradient_with_text() {
+    local gradient_len="$1"
+    local gradient_half=$((gradient_len / 2))
+    local text="$2"
+    local text_len=${#text}
+    local text_half=$((text_len / 2))
+
+    local gradient_first=$((gradient_half - text_half))
+    local gradient_last=$((gradient_half + text_half))
+
+    colored_text=$(get_text)
+    first_gradient=$(get_gradient 0 "$gradient_first")
+    last_gradient=$(get_gradient "$gradient_last" "$gradient_len")
+
+    echo "${first_gradient}${colored_text}${last_gradient}"
+}
+
+run_hook() {
+    gradient=$(get_gradient 0 "$palette_len")
+    gradient_and_text=$(gradient_with_text "$palette_len" "$welcome_msg")
+
+    echo -e "$gradient"
+    echo -e "$gradient_and_text"
+    echo -e "$gradient"
+}
+run_hook

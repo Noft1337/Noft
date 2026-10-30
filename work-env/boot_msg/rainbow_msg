@@ -1,0 +1,162 @@
+#!/bin/sh
+# Author: Michael Audri
+# I use this script in initcpio to display a fancy message when booting up my host
+
+WELCOME_MSG="~~~Welcome to Noft's Arch Linux~~~"
+SOLID_COLOR="\033[39m" # White
+
+# Check if terminal supports 256 colors
+if [ "$(tput colors)" -ge 256 ]; then
+    IS_256_TERM=true
+else
+    IS_256_TERM=false
+fi
+
+# Define the rainbow colors as space-separated strings
+COLORS_16="31 33 32 36 34 35"
+COLORS_256="196 202 208 214 220 226 190 154 118 82 46 47 48 49 50 51 45 39 33 27 21 20 19 18 54 55 56 57 93 129 165 201 200 199 198 197"
+
+# Get the terminal width using tput, if available
+if command -v tput >/dev/null; then
+    _term_cols=$(tput cols)
+    if $IS_256_TERM; then
+        _palette=$COLORS_256
+    else
+        _palette=$COLORS_16
+    fi
+
+    # shellcheck disable=SC2086
+    set -- $_palette
+    _len="$#"
+    _to_sub=$(expr "$_term_cols" % "$_len")
+
+    PALETTE_LEN=$((_term_cols - _to_sub))
+else
+    PALETTE_LEN=114 # Fallback to 114 if tput is not available
+fi
+
+# Weather or not should it paint the background without any character
+# Looks much cleaner but might not be supported on all POSIX Shells (such as the GRUB one)
+USE_BACKGROUND=false
+USE_BOLD=true
+
+if $USE_BACKGROUND; then
+    GRADIENT_CHAR=" "
+else
+    GRADIENT_CHAR="#"
+fi
+
+# Reset color
+RESET="\033[0m"
+BOLD="\033[1m"
+
+if [ "$IS_256_TERM" = true ]; then
+    BG_COLOR="\033[48;5;16m"
+else
+    BG_COLOR="\033[40m"
+fi
+
+get_color_code_from_palette() {
+    _color_palette="$1"
+    _index="$2"
+
+    # shellcheck disable=SC2086
+    set -- $_color_palette
+    _palette_len="$#"
+
+    _pallete_index=$((_index % _palette_len))
+    echo "$_color_palette" | cut -d' ' -f$((_pallete_index + 1))
+}
+
+get_text_rainbow() {
+    _char_i=0
+    _text=""
+
+    for i in $(seq 0 $((${#WELCOME_MSG} - 1))); do
+        _char=$(echo "$WELCOME_MSG" | cut -c$((i + 1)))
+        _text="${_text}${BG_COLOR}"
+        if [ "$_char" = " " ]; then
+            _text="${_text}${_char}"
+        else
+            _color="\033[$(get_color_code_from_palette "$COLORS_16" "$_char_i")m"
+            if $USE_BOLD; then
+                _text="${_text}${BOLD}"
+            fi
+            _text="${_text}${_color}${_char}${RESET}"
+            _char_i=$((_char_i + 1))
+        fi
+    done
+
+    echo "$_text"
+}
+
+get_text_solid() {
+    if $USE_BOLD; then
+        printf "%s" "${BOLD}${SOLID_COLOR}${WELCOME_MSG}${RESET}"
+    else
+        printf "%s" "${SOLID_COLOR}${WELCOME_MSG}${RESET}"
+    fi
+}
+
+get_gradient() {
+    _start="$1"
+    _end="$2"
+    _gradient=""
+
+    for i in $(seq "$_start" "$_end"); do
+        if [ "$IS_256_TERM" = true ]; then
+            _code=$(get_color_code_from_palette "$COLORS_256" "$i")
+            if $USE_BACKGROUND; then
+                _char_color="\033[48;5;${_code}m"
+            else
+                _char_color="\033[38;5;${_code}m"
+            fi
+        else
+            _code=$(get_color_code_from_palette "$COLORS_16" "$i")
+
+            if $USE_BACKGROUND; then
+                _code=$((_code + 10))
+            fi
+
+            _char_color="\033[${_code}m"
+        fi
+
+        if $USE_BOLD; then
+            _gradient="${_gradient}${BOLD}"
+        fi
+        _gradient="${_gradient}${_char_color}${GRADIENT_CHAR}"
+    done
+    _gradient="${_gradient}${RESET}"
+
+    echo "$_gradient"
+}
+
+gradient_with_text() {
+    _gradient_len="$1"
+    _text="$2"
+    _text_len=${#_text}
+    _text_half=$((_text_len / 2))
+
+    _gradient_half=$((_gradient_len / 2))
+    _gradient_first=$(($((_gradient_half - _text_half)) - 1))
+    _gradient_last=$((_gradient_half + _text_half))
+
+    if $USE_BACKGROUND; then
+        _colored_text=$(get_text_rainbow)
+    else
+        _colored_text=$(get_text_solid)
+    fi
+
+    _first_gradient=$(get_gradient 0 "$_gradient_first")
+    _last_gradient=$(get_gradient "$_gradient_last" "$_gradient_len")
+
+    echo "${_first_gradient}${_colored_text}${_last_gradient}"
+}
+
+run_hook() {
+    gradient=$(get_gradient 0 "$PALETTE_LEN")
+    gradient_and_text=$(gradient_with_text "$PALETTE_LEN" "$WELCOME_MSG")
+
+    # shellcheck disable=SC2059
+    printf "${gradient}\n${gradient_and_text}\n${gradient}\n"
+}
